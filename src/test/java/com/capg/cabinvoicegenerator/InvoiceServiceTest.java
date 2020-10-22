@@ -2,15 +2,23 @@ package com.capg.cabinvoicegenerator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Before;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
+
+import com.capg.cabinvoicegenerator.Exceptions.CabInvoiceException;
+import com.capg.cabinvoicegenerator.POJO.InvoiceSummary;
+import com.capg.cabinvoicegenerator.POJO.Ride;
+import com.capg.cabinvoicegenerator.Services.InvoiceService;
 
 public class InvoiceServiceTest {
 
-
 	@Test
 	public void givenDistanceTime_ReturnFare() {
-		InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
+		InvoiceService invoiceGenerator = new InvoiceService();
 		double distance = 2.0;
 		int time = 5;
 		assertEquals(25, invoiceGenerator.calculateFare(distance, time), 0.0);
@@ -18,7 +26,7 @@ public class InvoiceServiceTest {
 
 	@Test
 	public void givenLessDistanceOrTime_ShouldReturnMinFare() {
-		InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
+		InvoiceService invoiceGenerator = new InvoiceService();
 		double distance = 0.1;
 		int time = 1;
 		assertEquals(5, invoiceGenerator.calculateFare(distance, time), 0.0);
@@ -26,10 +34,30 @@ public class InvoiceServiceTest {
 
 	@Test
 	public void givenMultipleRideShouldReturnReturnInvoiceSummary() {
-		InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
-		Ride[] rides = { new Ride(2.0, 5), new Ride(0.1, 1) };
+		InvoiceService invoiceGenerator = new InvoiceService();
+		ArrayList<Ride> rides = new ArrayList<Ride>();
+		Collections.addAll(rides, new Ride(2.0, 5), new Ride(0.1, 1));
 		InvoiceSummary invoiceSummary = invoiceGenerator.calculateFare(rides);
 		InvoiceSummary expectedInvoiceSummary = new InvoiceSummary(2, 30);
 		assertEquals(expectedInvoiceSummary, invoiceSummary);
 	}
+
+	@Test
+	public void givenUserIdReturnsListofRides() throws CabInvoiceException {
+		InvoiceService invoiceService = new InvoiceService();
+		Map<Integer, ArrayList<Ride>> mapRides = new HashMap<>();
+		ArrayList<Ride> rideList1 = new ArrayList<Ride>();
+		ArrayList<Ride> rideList2 = new ArrayList<Ride>();
+		
+
+		Collections.addAll(rideList1, new Ride(2.0, 5), new Ride(0.1, 1));
+		mapRides.put(1, rideList1);
+		Collections.addAll(rideList2, new Ride(3.0, 5), new Ride(0.1, 1));
+		mapRides.put(2, rideList2);
+		invoiceService.addRidesToRepo(mapRides);
+		invoiceService.getInvoiceSummary(1);
+		InvoiceSummary expectedInvoiceSummary = new InvoiceSummary(2, 40);
+		assertEquals(expectedInvoiceSummary, invoiceService.getInvoiceSummary(2));
+	}
+
 }
