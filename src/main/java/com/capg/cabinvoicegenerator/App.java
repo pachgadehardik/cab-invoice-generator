@@ -1,4 +1,4 @@
-package com.capg.cabinvoicegenerator.cabinvoicegenerator;
+package com.capg.cabinvoicegenerator;
 
 /**
  * Hello world!

@@ -1,4 +1,4 @@
-package com.capg.cabinvoicegenerator.cabinvoicegenerator;
+package com.capg.cabinvoicegenerator;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
