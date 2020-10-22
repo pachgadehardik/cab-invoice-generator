@@ -1,5 +1,6 @@
 package com.capg.cabinvoicegenerator.Exceptions;
 
+@SuppressWarnings("unused")
 public class CabInvoiceException extends Exception {
 	/**
 	 * 
